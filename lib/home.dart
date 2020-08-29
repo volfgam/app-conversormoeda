@@ -7,9 +7,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  @override
-
-  final realController = TextEditingController();
+  final moedaRealController = TextEditingController();
   final dolarController = TextEditingController();
   final euroController = TextEditingController();
 
@@ -17,44 +15,45 @@ class _HomeState extends State<Home> {
   double euro;
 
   void _realChanged(String text) {
-    if(text.isEmpty) {
+    if (text.isEmpty) {
       _clearAll();
       return;
     }
 
     double real = double.parse(text);
-    dolarController.text  = (real/dolar).toStringAsFixed(2);
-    euroController.text  = (real/euro).toStringAsFixed(2);
+    dolarController.text = (real / dolar).toStringAsFixed(2);
+    euroController.text = (real / euro).toStringAsFixed(2);
   }
 
   void _dolarChanged(String text) {
-    if(text.isEmpty) {
+    if (text.isEmpty) {
       _clearAll();
       return;
     }
 
     double dolar = double.parse(text);
-    realController.text  = (dolar * this.dolar).toStringAsFixed(2);
-    euroController.text  = (dolar * this.dolar /euro).toStringAsFixed(2);
+    moedaRealController.text = (dolar * this.dolar).toStringAsFixed(2);
+    euroController.text = (dolar * this.dolar / euro).toStringAsFixed(2);
   }
 
   void _euroChanged(String text) {
-    if(text.isEmpty) {
+    if (text.isEmpty) {
       _clearAll();
       return;
     }
 
     double euro = double.parse(text);
-    realController.text  = (euro * this.euro).toStringAsFixed(2);
-    dolarController.text  = (euro * this.euro /dolar).toStringAsFixed(2);
+    moedaRealController.text = (euro * this.euro).toStringAsFixed(2);
+    dolarController.text = (euro * this.euro / dolar).toStringAsFixed(2);
   }
 
-  void _clearAll(){
-    realController.text = "";
+  void _clearAll() {
+    moedaRealController.text = "";
     dolarController.text = "";
     euroController.text = "";
   }
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
@@ -66,25 +65,20 @@ class _HomeState extends State<Home> {
       body: FutureBuilder<Map>(
         future: getData(),
         builder: (context, snapshot) {
-          switch(snapshot.connectionState) {
-            case  ConnectionState.none:
+          switch (snapshot.connectionState) {
+            case ConnectionState.none:
             case ConnectionState.waiting:
               return Center(
-                child: Text("Carregando dados...",
-                style: TextStyle(
-                    color: Colors.amber,
-                    fontSize: 25.0),
-                textAlign: TextAlign.center)
-              );
+                  child: Text("Carregando dados...",
+                      style: TextStyle(color: Colors.amber, fontSize: 25.0),
+                      textAlign: TextAlign.center));
             default:
-              if (snapshot.hasError){
+              if (snapshot.hasError) {
                 return Center(
                     child: Text("Erro ao carregar dados",
-                        style: TextStyle(
-                            color: Colors.redAccent,
-                            fontSize: 25.0),
-                        textAlign: TextAlign.center)
-                );
+                        style:
+                            TextStyle(color: Colors.redAccent, fontSize: 25.0),
+                        textAlign: TextAlign.center));
               } else {
                 dolar = snapshot.data["results"]["currencies"]["USD"]["buy"];
                 euro = snapshot.data["results"]["currencies"]["EUR"]["buy"];
@@ -94,12 +88,16 @@ class _HomeState extends State<Home> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      Icon(Icons.monetization_on, size: 150, color: Colors.amber),
-                      builderTextField('Real', 'R\$', realController, _realChanged),
+                      Icon(Icons.monetization_on,
+                          size: 150, color: Colors.amber),
+                      builderTextField(
+                          'Real', 'R\$', moedaRealController, _realChanged),
                       Divider(),
-                      builderTextField('Dólar', 'US\$', dolarController, _dolarChanged),
+                      builderTextField(
+                          'Dólar', 'US\$', dolarController, _dolarChanged),
                       Divider(),
-                      builderTextField('Euro', '€', euroController, _euroChanged)
+                      builderTextField(
+                          'Euro', '€', euroController, _euroChanged)
                     ],
                   ),
                 );
@@ -110,21 +108,17 @@ class _HomeState extends State<Home> {
     );
   }
 
-  Widget builderTextField(String label, String prefix, TextEditingController controller, Function func) {
+  Widget builderTextField(String label, String prefix,
+      TextEditingController controller, Function func) {
     return TextField(
-      controller: controller,
-      decoration: InputDecoration(
-          labelText: label,
-          labelStyle: TextStyle(color: Colors.amber),
-          border: OutlineInputBorder(),
-          prefixText: prefix
-      ),
-      style: TextStyle(
-          fontSize: 25.0,
-          color: Colors.amber
-      ),
-      onChanged: func,
-      keyboardType: TextInputType.numberWithOptions(decimal: true)
-    );
+        controller: controller,
+        decoration: InputDecoration(
+            labelText: label,
+            labelStyle: TextStyle(color: Colors.amber),
+            border: OutlineInputBorder(),
+            prefixText: prefix),
+        style: TextStyle(fontSize: 25.0, color: Colors.amber),
+        onChanged: func,
+        keyboardType: TextInputType.numberWithOptions(decimal: true));
   }
 }
