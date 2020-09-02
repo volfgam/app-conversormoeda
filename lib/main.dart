@@ -8,17 +8,22 @@ const requestUrl =
     "https://api.hgbrasil.com/finance?format=json-cors&key=03f29d6d";
 
 void main() async {
-  runApp(MaterialApp(
+  runApp(
+    MaterialApp(
       home: Home(),
       theme: ThemeData(
-          hintColor: Colors.amber,
-          primaryColor: Colors.white,
-          inputDecorationTheme: InputDecorationTheme(
-              enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.amberAccent)),
-              focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.amber)),
-              hintStyle: TextStyle(color: Colors.amber)))));
+        hintColor: Colors.amber,
+        primaryColor: Colors.white,
+        inputDecorationTheme: InputDecorationTheme(
+          enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.amberAccent)),
+          focusedBorder:
+              OutlineInputBorder(borderSide: BorderSide(color: Colors.amber)),
+          hintStyle: TextStyle(color: Colors.amber),
+        ),
+      ),
+    ),
+  );
 }
 
 Future<Map> getData() async {
